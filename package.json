@@ -1,0 +1,29 @@
+{
+  "name": "emb-knowledge",
+  "version": "1.0.0",
+  "description": "看得懂的嵌入式 — 用交互动画讲嵌入式协议/算法的学习网站",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chen111111111112121/emb_knowledge.git"
+  },
+  "keywords": [
+    "embedded",
+    "uart",
+    "visualization",
+    "教学"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chen111111111112121/emb_knowledge/issues"
+  },
+  "homepage": "https://github.com/chen111111111112121/emb_knowledge#readme",
+  "devDependencies": {
+    "vitest": "^4.1.9"
+  }
+}
