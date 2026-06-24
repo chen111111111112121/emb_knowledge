@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>一个动画看懂 UART 串口通信 - 看得懂的嵌入式</title>
   <meta name="description" content="用交互动画演示 UART 串口通信:起始位、数据位、校验位、停止位是怎么一位位发出去的。嵌入式新手必看。" />
+  <link rel="stylesheet" href="vendor/highlight.css" />
   <link rel="stylesheet" href="styles/main.css" />
 </head>
 <body>
@@ -138,11 +139,23 @@
       </section>
     </article>
 
+    <section class="chips">
+      <h2>8. 主流芯片怎么配 UART</h2>
+      <p class="lead">下面是四款常见芯片的最小可运行示例(初始化 → 发字符串 → 收一个字节回显),切换 Tab 查看。</p>
+      <div id="chipTabs"></div>
+    </section>
+
     <section class="cta">
       <p>想系统学习嵌入式?关注我的公众号 / 知识星球(链接待补充),获取完整教程与源码。</p>
     </section>
   </main>
 
   <script type="module" src="src/ui.js"></script>
+  <script src="vendor/highlight.min.js"></script>
+  <script type="module">
+    import { uartChips } from './src/chips/uart-chips.js';
+    import { renderChipTabs } from './src/chip-tabs.js';
+    renderChipTabs(document.getElementById('chipTabs'), uartChips);
+  </script>
 </body>
 </html>
