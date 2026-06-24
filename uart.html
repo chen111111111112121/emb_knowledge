@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>一个动画看懂 UART 串口通信 - 看得懂的嵌入式</title>
+  <meta name="description" content="用交互动画演示 UART 串口通信:起始位、数据位、校验位、停止位是怎么一位位发出去的。嵌入式新手必看。" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">看得懂的嵌入式</a>
+  </header>
+
+  <main class="container">
+    <h1>一个动画看懂 UART 串口通信</h1>
+    <p class="lead">输入一个字符,点击「发送」,看它如何一位位变成电平信号发出去。</p>
+
+    <section class="controls">
+      <label>发送字符
+        <input id="charInput" type="text" maxlength="1" value="A" />
+      </label>
+      <label>波特率
+        <select id="baudSelect">
+          <option value="9600">9600</option>
+          <option value="115200" selected>115200</option>
+        </select>
+      </label>
+      <label>数据位
+        <select id="dataBitsSelect">
+          <option value="5">5</option><option value="6">6</option>
+          <option value="7">7</option><option value="8" selected>8</option>
+          <option value="9">9</option>
+        </select>
+      </label>
+      <label>校验位
+        <select id="paritySelect">
+          <option value="none" selected>无</option>
+          <option value="even">偶校验</option>
+          <option value="odd">奇校验</option>
+        </select>
+      </label>
+      <label>停止位
+        <select id="stopBitsSelect">
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+        </select>
+      </label>
+      <label>速度
+        <select id="speedSelect">
+          <option value="1000">慢</option>
+          <option value="600" selected>中</option>
+          <option value="250">快</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="player-bar">
+      <button id="playBtn">▶ 发送</button>
+      <button id="stepBtn">单步 ⏭</button>
+      <button id="resetBtn">重置 ↺</button>
+    </section>
+
+    <div class="legend">
+      <span><i class="dot start"></i>起始位</span>
+      <span><i class="dot data"></i>数据位</span>
+      <span><i class="dot parity"></i>校验位</span>
+      <span><i class="dot stop"></i>停止位</span>
+    </div>
+
+    <canvas id="waveCanvas" width="900" height="220"></canvas>
+
+    <p id="bitInfo" class="bit-info">点击「发送」开始演示</p>
+    <p class="binary-info">数据位(LSB在前):<span id="binaryView">—</span></p>
+
+    <section class="explain">
+      <h2>UART 是怎么工作的?</h2>
+      <p>UART 平时空闲时线上是<strong>高电平</strong>。要发数据时,先拉低一位作为<strong>起始位</strong>通知对方"我要发了";然后从<strong>最低位(LSB)</strong>开始一位位把数据发出去;可选地发一个<strong>校验位</strong>用于检错;最后拉高一位或两位作为<strong>停止位</strong>表示这帧结束。每一位持续的时间由<strong>波特率</strong>决定,9600 波特率就是每秒 9600 位,每位约 0.104 毫秒。</p>
+    </section>
+
+    <section class="cta">
+      <p>想系统学习嵌入式?关注我的公众号 / 知识星球(链接待补充),获取完整教程与源码。</p>
+    </section>
+  </main>
+
+  <script type="module" src="src/ui.js"></script>
+</body>
+</html>
