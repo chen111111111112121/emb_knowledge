@@ -73,10 +73,70 @@
     <p id="bitInfo" class="bit-info">点击「发送」开始演示</p>
     <p class="binary-info">数据位(LSB在前):<span id="binaryView">—</span></p>
 
-    <section class="explain">
-      <h2>UART 是怎么工作的?</h2>
-      <p>UART 平时空闲时线上是<strong>高电平</strong>。要发数据时,先拉低一位作为<strong>起始位</strong>通知对方"我要发了";然后从<strong>最低位(LSB)</strong>开始一位位把数据发出去;可选地发一个<strong>校验位</strong>用于检错;最后拉高一位或两位作为<strong>停止位</strong>表示这帧结束。每一位持续的时间由<strong>波特率</strong>决定,9600 波特率就是每秒 9600 位,每位约 0.104 毫秒。</p>
-    </section>
+    <article class="lesson">
+      <section>
+        <h2>1. UART 是什么</h2>
+        <p>UART(通用异步收发器)是一种<strong>异步串行</strong>通信方式:数据一位接一位地在一根线上传输,收发双方<strong>没有共享时钟线</strong>,而是靠事先约定好的<strong>波特率</strong>各自计时。这点和 SPI、I2C(都有独立时钟线,属于同步通信)正好相反——少一根时钟线更省引脚,代价是双方必须把波特率配成一样。</p>
+      </section>
+
+      <section>
+        <h2>2. 一帧长什么样</h2>
+        <p>上面的动画演示的就是一帧的结构。线路空闲时是<strong>高电平</strong>;发送时依次是:</p>
+        <ul>
+          <li><strong>起始位</strong>:拉低 1 位,通知对方"要开始了"。</li>
+          <li><strong>数据位</strong>:5~9 位,<strong>从最低位(LSB)先发</strong>。</li>
+          <li><strong>校验位</strong>(可选):用于检错。</li>
+          <li><strong>停止位</strong>:拉高 1 或 2 位,表示这帧结束。</li>
+        </ul>
+        <p>常用记法 <code>8N1</code> = 8 数据位 / 无校验(None)/ 1 停止位。</p>
+      </section>
+
+      <section>
+        <h2>3. 波特率与误差</h2>
+        <p><strong>波特率</strong>就是每秒传输多少位,如 9600、115200。因为没有时钟线,接收端是这样找准每一位的:检测到起始位下降沿后,以约定的位时间为节拍,在<strong>每一位的中点采样</strong>(芯片内部常用 16 倍过采样来定位中点),这样对边沿抖动最不敏感。</p>
+        <p>波特率由芯片时钟分频得到,而<strong>分频往往不能整除</strong>,于是产生<strong>波特率误差</strong>。例如用 11.0592MHz 晶振能精确分出 9600,但用 12MHz 晶振就有约 ±0.16%~±几% 的误差。一般要求收发两端的累计误差控制在 <strong>±2% 以内</strong>,否则采样点会逐位偏移,最终采错位、出现乱码。这也是很多入门套件特意选 11.0592MHz 晶振的原因。</p>
+      </section>
+
+      <section>
+        <h2>4. 电平与接口:TTL / RS-232 / RS-485</h2>
+        <p>"UART"说的是<strong>数据格式</strong>,而线上用什么电平是另一回事:</p>
+        <ul>
+          <li><strong>TTL 电平</strong>:MCU 引脚直接输出,高=供电电压(3.3V 或 5V),低=0V。板内、短距离用。</li>
+          <li><strong>RS-232</strong>:电脑老串口,逻辑<strong>反相</strong>且电压为 ±3~±15V,要用 MAX232 之类芯片和 MCU 的 TTL 互转,<strong>不能直连</strong>。</li>
+          <li><strong>RS-485</strong>:用<strong>差分</strong>(A/B 两线)传输,抗干扰强、可达上千米、支持多机总线,工业常用,需要 MAX485 之类收发器。</li>
+        </ul>
+        <p>两条铁律:① 两设备通信必须<strong>共地(GND 相连)</strong>;② <strong>TX 接对方的 RX、RX 接对方的 TX(交叉)</strong>。</p>
+      </section>
+
+      <section>
+        <h2>5. 校验与可靠性</h2>
+        <p>奇偶校验位让一帧里 1 的个数为奇数(奇校验)或偶数(偶校验)。它只能<strong>发现 1 位翻转的错误,不能纠正</strong>,也查不出偶数个位同时出错。芯片收到数据时还会报两类错:<strong>帧错误</strong>(该是停止位的位置却是低电平,通常是波特率不匹配)和<strong>溢出错误</strong>(上一个字节还没被读走,新字节又到了,旧的被覆盖)。</p>
+      </section>
+
+      <section>
+        <h2>6. 流控(防止收太快丢数据)</h2>
+        <ul>
+          <li><strong>无流控</strong>:最常见,接收方必须够快(用中断/DMA)否则可能溢出丢字节。</li>
+          <li><strong>软件流控(XON/XOFF)</strong>:用两个特殊字符通知对方"暂停/继续发",会占用数据通道、不能传二进制。</li>
+          <li><strong>硬件流控(RTS/CTS)</strong>:多两根线,接收方用 RTS 告诉对方"我忙",最可靠,传文件常用。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>7. 常见 Bug 排查表</h2>
+        <table class="bug-table">
+          <thead><tr><th>症状</th><th>可能原因</th><th>怎么排查</th></tr></thead>
+          <tbody>
+            <tr><td>收到全是乱码</td><td>两端波特率不一致;晶振不准导致误差过大</td><td>核对双方波特率;改用 11.0592MHz 或带误差小的时钟</td></tr>
+            <tr><td>完全收不到数据</td><td>没共地;TX/RX 接反;电平不匹配(TTL 直连了 RS-232)</td><td>连 GND;交叉接线;加电平转换芯片</td></tr>
+            <tr><td>只能发不能收(或反之)</td><td>对应方向引脚没配对、TX-RX 接反</td><td>万用表/逻辑分析仪确认线序与电平</td></tr>
+            <tr><td>偶尔丢字节</td><td>轮询太慢、没用中断/DMA、缓冲区溢出</td><td>改中断或 DMA 接收;加大接收缓冲</td></tr>
+            <tr><td>中文/特殊字符乱码</td><td>字符编码不一致(GBK vs UTF-8)</td><td>统一两端编码;按字节看十六进制确认</td></tr>
+            <tr><td>偶尔多一位错位</td><td>波特率累计误差超 ±2%</td><td>重算分频值,选误差更小的波特率/时钟</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </article>
 
     <section class="cta">
       <p>想系统学习嵌入式?关注我的公众号 / 知识星球(链接待补充),获取完整教程与源码。</p>

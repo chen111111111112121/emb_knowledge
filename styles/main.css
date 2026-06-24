@@ -39,6 +39,27 @@ h1 { font-size: 28px; }
   .controls { flex-direction: column; }
 }
 
+/* 教学正文 */
+.lesson { margin-top: 24px; }
+.lesson section { margin-bottom: 28px; }
+.lesson h2 { font-size: 20px; margin: 0 0 8px; padding-left: 10px; border-left: 4px solid #1a73e8; }
+.lesson p { margin: 8px 0; }
+.lesson ul { margin: 8px 0; padding-left: 22px; }
+.lesson li { margin: 4px 0; }
+.lesson code { background: #f1f3f4; padding: 1px 6px; border-radius: 4px; font-size: 13px; }
+/* Bug 排查表 */
+.bug-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 8px; }
+.bug-table th, .bug-table td { border: 1px solid #e0e0e0; padding: 8px 10px; text-align: left; vertical-align: top; }
+.bug-table th { background: #f8f9fa; }
+.bug-table td:first-child { font-weight: 600; white-space: nowrap; }
+@media (max-width: 600px) {
+  .bug-table, .bug-table thead, .bug-table tbody, .bug-table tr, .bug-table th, .bug-table td { display: block; }
+  .bug-table thead { display: none; }
+  .bug-table tr { margin-bottom: 12px; border: 1px solid #e0e0e0; border-radius: 6px; padding: 6px; }
+  .bug-table td { border: none; }
+  .bug-table td:first-child { white-space: normal; color: #1a73e8; }
+}
+
 /* 首页概念卡片 */
 .topic-list { list-style: none; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .topic-card a, .topic-card span { display: block; padding: 20px; border: 1px solid #eee; border-radius: 10px; text-decoration: none; color: inherit; transition: box-shadow .2s; }
