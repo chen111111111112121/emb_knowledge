@@ -1,0 +1,49 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #202124;
+  background: #fff;
+  line-height: 1.6;
+}
+.site-header { padding: 16px 24px; border-bottom: 1px solid #eee; }
+.logo { font-weight: 700; font-size: 18px; color: #1a73e8; text-decoration: none; }
+.container { max-width: 960px; margin: 0 auto; padding: 24px; }
+h1 { font-size: 28px; }
+.lead { color: #5f6368; }
+.controls {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  background: #f8f9fa; padding: 16px; border-radius: 8px; margin: 16px 0;
+}
+.controls label { display: flex; flex-direction: column; font-size: 13px; color: #5f6368; gap: 4px; }
+.controls input, .controls select { padding: 6px 8px; border: 1px solid #dadce0; border-radius: 6px; }
+.player-bar { display: flex; gap: 12px; margin-bottom: 12px; }
+.player-bar button {
+  padding: 8px 16px; border: none; border-radius: 6px;
+  background: #1a73e8; color: #fff; font-size: 14px; cursor: pointer;
+}
+.player-bar button:hover { background: #1558b0; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #5f6368; margin-bottom: 8px; }
+.legend i.dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 4px; vertical-align: middle; }
+.legend .dot.start { background: #ea4335; }
+.legend .dot.data { background: #1a73e8; }
+.legend .dot.parity { background: #fbbc04; }
+.legend .dot.stop { background: #34a853; }
+#waveCanvas { width: 100%; height: auto; border: 1px solid #eee; border-radius: 8px; background: #fff; }
+.bit-info { font-size: 18px; font-weight: 600; min-height: 28px; }
+.binary-info { font-family: monospace; color: #5f6368; }
+.explain { margin-top: 24px; padding: 16px; background: #f8f9fa; border-radius: 8px; }
+.cta { margin-top: 24px; padding: 16px; border: 1px dashed #1a73e8; border-radius: 8px; color: #1558b0; }
+@media (max-width: 600px) {
+  h1 { font-size: 22px; }
+  .controls { flex-direction: column; }
+}
+
+/* 首页概念卡片 */
+.topic-list { list-style: none; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.topic-card a, .topic-card span { display: block; padding: 20px; border: 1px solid #eee; border-radius: 10px; text-decoration: none; color: inherit; transition: box-shadow .2s; }
+.topic-card a:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.topic-card h2 { margin: 0 0 8px; font-size: 18px; color: #1a73e8; }
+.topic-card p { margin: 0; color: #5f6368; font-size: 14px; }
+.topic-card.coming span { opacity: .5; cursor: default; }
+.topic-card.coming em { font-size: 12px; color: #9aa0a6; }
